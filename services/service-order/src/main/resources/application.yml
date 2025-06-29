@@ -1,0 +1,14 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: service-order
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+
+  config:
+    import:
+      - nacos:common.properties?order
+
+
