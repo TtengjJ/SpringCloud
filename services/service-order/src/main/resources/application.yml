@@ -1,6 +1,9 @@
 server:
-  port: 8080
+  port: 8000
 spring:
+  profiles:
+    active: dev
+    include: feign
   application:
     name: service-order
   cloud:
@@ -12,3 +15,6 @@ spring:
       - nacos:common.properties?order
 
 
+logging:
+  level:
+    com.atguigu.order.feign: DEBUG

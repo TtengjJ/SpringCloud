@@ -19,10 +19,7 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
-        </dependency>
+
         <!-- Web 支持 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

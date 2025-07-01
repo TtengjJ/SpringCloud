@@ -3,6 +3,7 @@ package com.atguigu.order.service.impl;
 
 import com.atguigu.Order.bean.Order;
 import com.atguigu.Product.bean.Product;
+import com.atguigu.order.feign.ProductFeignClient;
 import com.atguigu.order.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -25,9 +24,15 @@ public class OrderServiceimpl implements OrderService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    ProductFeignClient productFeignClient;
+
     @Override
     public Order createOrder(Long userId, Long productId) {
-        Product product = getProductFroRemote(productId);
+//        Product product = getProductFroRemote(productId);
+
+        // 使用FeignClient远程调用商品服务获取商品信息
+        Product product= productFeignClient.getProductById(productId);
 
         Order order = new Order();
         order.setId(1L);
