@@ -1,6 +1,8 @@
 package com.atguigu.order.controller;
 
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.atguigu.Order.bean.Order;
 import com.atguigu.order.properties.OrderProperties;
 import com.atguigu.order.service.OrderService;
@@ -34,9 +36,31 @@ public class OrderController {
         return "订单超时时间: " + orderProperties.getTimeout() + ", 自动确认收货: " + orderProperties.getAutoConfirm();
     }
 
-    @GetMapping("create")
+    @GetMapping("/create")
     public Order createOrder(@RequestParam Long userId, Long productId) {
         // 调用订单服务的创建订单方法
         return orderService.createOrder(userId, productId);
+    }
+
+    @GetMapping("/seckill")
+    @SentinelResource(value="seckill-order",fallback = "seckillFallback")
+    public Order seckill(@RequestParam Long userId, Long productId) {
+        // 调用订单服务的创建订单方法
+       Order order = orderService.createOrder(userId, productId);
+       order.setId(Long.MAX_VALUE); // 设置订单ID为最小值，模拟秒杀订单
+        // 模拟秒杀逻辑
+        System.out.println("秒杀成功，订单ID: " + order.getId());
+        return order;
+    }
+
+    //声明一个降级方法,Throwable比BlockException更通用
+    public Order seckillFallback(Long userId, Long productId, Throwable exception) {
+        System.out.println(" 秒杀失败，订单ID: " + productId);
+        // 调用订单服务的创建订单方法
+        Order order = new Order();
+        order.setId(0L);
+        order.setUserId(String.valueOf(userId));
+        order.setAddress("异常信息："+exception.getClass());
+        return order;
     }
 }

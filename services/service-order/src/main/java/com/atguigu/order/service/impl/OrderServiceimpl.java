@@ -1,6 +1,8 @@
 package com.atguigu.order.service.impl;
 
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.atguigu.Order.bean.Order;
 import com.atguigu.Product.bean.Product;
 import com.atguigu.order.feign.ProductFeignClient;
@@ -27,6 +29,7 @@ public class OrderServiceimpl implements OrderService {
     @Autowired
     ProductFeignClient productFeignClient;
 
+    @SentinelResource(value = "createOrder", blockHandler = "createOrderBlockHandler")// Sentinel指定资源名称和限流处理方法
     @Override
     public Order createOrder(Long userId, Long productId) {
 //        Product product = getProductFroRemote(productId);
@@ -44,6 +47,17 @@ public class OrderServiceimpl implements OrderService {
         order.setProductlist(List.of(product)); // 订单列表
         return order;
     }
+
+    // 限流处理方法,blockHandler指定的方法返回兜底数据
+    public Order createOrderBlockHandler(Long userId, Long productId, BlockException e) {
+        log.error("限流了，无法创建订单: {}", e.getMessage());
+        Order order = new Order();
+        order.setId(0L);
+        order.setUserId(userId.toString());
+        order.setAddress("异常信息："+e.getClass());
+        return order;
+    }
+
 
     private Product getProductFroRemote(Long productId) {
         // 1、获取商品所在所有机器的ip+port

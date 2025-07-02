@@ -1,5 +1,10 @@
 spring:
     cloud:
+      sentinel:
+        transport:
+          dashboard: localhost:8080
+        eager: true #提前加载
+        web-context-unify: false #分割请求链路
       openfeign:
         client:
             config:
@@ -11,6 +16,8 @@ spring:
                     connect-timeout: 3000
                     read-timeout: 3000
                     logger-level: full
+
+
 feign:
     sentinel:
         enabled: true
