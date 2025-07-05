@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 //@RefreshScope// 开启配置文件动态刷新功能
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/api/order")
 public class OrderController {
 
     @Autowired

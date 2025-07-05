@@ -12,6 +12,6 @@ public interface ProductFeignClient {
     //mvc注解两套使用逻辑
     //Controller上，接收请求
     //FeignClient上，远程调用,发送请求
-    @GetMapping("/{id}") // 使用GET请求，路径为/product/{productId}
+    @GetMapping("/api/product/product/{id}") // 使用GET请求，路径为/product/{productId}
     Product getProductById(@PathVariable Long id); // 定义远程调用的方法，参数为商品ID
 }
